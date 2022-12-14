@@ -2,6 +2,7 @@ import { makeObservable, observable, action, computed } from "mobx";
 
 interface TodoItem {
   type: "TodoItem";
+  index?: number;
   id: number;
   title: string;
   completed: boolean;
@@ -80,6 +81,7 @@ export class TodoStoreImpl {
       if (todo.id === id) {
         const indexOf = this.todos.indexOf(todo);
         const futureItem = todo;
+        futureItem.index = indexOf;
         this.future.push(futureItem);
         this.todos.splice(indexOf, 1);
       }
@@ -90,7 +92,7 @@ export class TodoStoreImpl {
     const item: any = this.future[this.future.length - 1];
     const itemType: string = this.future[this.future.length - 1].type;
     if (itemType === "TodoItem") {
-      this.todos.push(item);
+      this.todos.splice(item.index, 0, item);
     } else {
       let itemIndex: number = -1;
       this.todos.forEach((todo) =>
