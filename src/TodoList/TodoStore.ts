@@ -103,15 +103,21 @@ export class TodoStoreImpl {
   redoDelete() {
     const item: any = this.past[this.past.length - 1];
     const itemType: string = this.past[this.past.length - 1].type;
+    let itemIndex: number = -1;
+    this.todos.forEach((todo) =>
+      todo.id === item.itemId ? (itemIndex = this.todos.indexOf(todo)) : null
+    );
+
     if (itemType === "TodoItem") {
-      this.deleteTodo(item);
+      this.deleteTodo(item.id);
     } else {
-      let itemIndex: number = -1;
-      this.todos.forEach((todo) =>
-        todo.id === item.itemId ? (itemIndex = this.todos.indexOf(todo)) : null
-      );
+      // let itemIndex: number = -1;
+      // this.todos.forEach((todo) =>
+      //   todo.id === item.itemId ? (itemIndex = this.todos.indexOf(todo)) : null
+      // );
       // console.log(itemIndex);
       this.todos[itemIndex].completed = !this.todos[itemIndex].completed;
+      this.addToggleItem(itemIndex, this.todos[itemIndex].id);
     }
 
     // if (this.past.length) {
