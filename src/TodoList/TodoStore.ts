@@ -30,6 +30,7 @@ export class TodoStoreImpl {
       deleteTodo: action,
       undo: action,
       redo: action,
+      addToggleItem: action,
     });
   }
 

@@ -22,7 +22,7 @@ const TodoList = observer(({ todoStore }: Todolist) => {
         <StyledBtn
           title="redo"
           style={{ float: "left", background: "lightcyan" }}
-          onClick={() => todoStore.redoDelete()}
+          onClick={() => todoStore.redo()}
           disabled={todoStore.past.length ? false : true}
         >
           <svg
@@ -46,7 +46,7 @@ const TodoList = observer(({ todoStore }: Todolist) => {
         <StyledBtn
           title="undo"
           style={{ float: "right", background: "lightcyan" }}
-          onClick={() => todoStore.undoDelete()}
+          onClick={() => todoStore.undo()}
           disabled={todoStore.future.length ? false : true}
         >
           <svg
