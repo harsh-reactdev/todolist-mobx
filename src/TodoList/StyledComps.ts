@@ -13,14 +13,13 @@ export const Header = styled.div`
 
 export const StyledInput = styled.input`
   margin-top: 25px;
-  width: 80%;
+  width: 60%;
   height: 25px;
 `;
 
 export const StyledSubmitBtn = styled.button`
   width: 18%;
   height: 31px;
-  border-left: none;
   background-color: aliceblue;
 `;
 
@@ -64,4 +63,10 @@ export const MarkDone = styled.button`
   /* left: 90px; */
   width: 90px;
   position: relative;
+`;
+
+export const StyledBtn = styled.button`
+  width: 150px;
+  height: 40px;
+  background: none;
 `;

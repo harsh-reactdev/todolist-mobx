@@ -7,7 +7,7 @@ interface Todolist {
 }
 
 const TaskMap = observer(({ todoStore }: Todolist) => {
-  const taskList = todoStore.todos.map((todo, index) => {
+  const taskList = todoStore.todos.map((todo) => {
     return (
       <TodoCardComp
         todoStore={todoStore}

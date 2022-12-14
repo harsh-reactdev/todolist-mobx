@@ -21,7 +21,6 @@ const InputComponent = observer(({ todoStore }: Todolist) => {
         onClick={() => {
           if (todoStore.inputVal) {
             todoStore.addTodo(todoStore.inputVal);
-            // todoStore.inputVal = "";
           }
         }}
       >
