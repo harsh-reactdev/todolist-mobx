@@ -15,16 +15,16 @@ interface ToggleItem {
 }
 
 export class TodoStoreImpl {
-  past: (TodoItem | ToggleItem)[] = [];
+  redoArray: (TodoItem | ToggleItem)[] = [];
   todos: TodoItem[] = [];
-  future: (TodoItem | ToggleItem)[] = [];
+  undoArray: (TodoItem | ToggleItem)[] = [];
   inputVal: string = "";
   constructor() {
     makeObservable(this, {
       inputVal: observable,
-      past: observable,
+      redoArray: observable,
       todos: observable,
-      future: observable,
+      undoArray: observable,
       addTodo: action,
       toggleTodo: action,
       status: computed,
@@ -52,7 +52,7 @@ export class TodoStoreImpl {
       itemIndex: index,
       itemId: id,
     };
-    this.future.push(toggleItem);
+    this.undoArray.push(toggleItem);
     // console.log(this.future);
   }
 
@@ -80,15 +80,15 @@ export class TodoStoreImpl {
         const indexOf = this.todos.indexOf(todo);
         const futureItem = todo;
         futureItem.index = indexOf;
-        this.future.push(futureItem);
+        this.undoArray.push(futureItem);
         this.todos.splice(indexOf, 1);
       }
     }
   }
 
   undo() {
-    const item: any = this.future[this.future.length - 1];
-    const itemType: string = this.future[this.future.length - 1].type;
+    const item: any = this.undoArray[this.undoArray.length - 1];
+    const itemType: string = this.undoArray[this.undoArray.length - 1].type;
     if (itemType === "TodoItem") {
       this.todos.splice(item.index, 0, item);
     } else {
@@ -99,13 +99,13 @@ export class TodoStoreImpl {
       // console.log(itemIndex);
       this.todos[itemIndex].completed = !this.todos[itemIndex].completed;
     }
-    this.past.push(item);
-    this.future.splice(this.future.length - 1, 1);
+    this.redoArray.push(item);
+    this.undoArray.splice(this.undoArray.length - 1, 1);
   }
 
   redo() {
-    const item: any = this.past[this.past.length - 1];
-    const itemType: string = this.past[this.past.length - 1].type;
+    const item: any = this.redoArray[this.redoArray.length - 1];
+    const itemType: string = this.redoArray[this.redoArray.length - 1].type;
     let itemIndex: number = -1;
     this.todos.forEach((todo) =>
       todo.id === item.itemId ? (itemIndex = this.todos.indexOf(todo)) : null
@@ -117,7 +117,7 @@ export class TodoStoreImpl {
       this.todos[itemIndex].completed = !this.todos[itemIndex].completed;
       this.addToggleItem(itemIndex, this.todos[itemIndex].id);
     }
-    this.past.splice(this.past.length - 1, 1);
+    this.redoArray.splice(this.redoArray.length - 1, 1);
   }
 }
 
