@@ -17,7 +17,9 @@ const TodoCardComp = observer(
         <br />
         <TodoStatus>{completed ? "completed" : "Not Completed"}</TodoStatus>
         <br />
-        <MarkDone onClick={() => todoStore.toggleTodo(id)}>Mark Done</MarkDone>
+        <MarkDone onClick={() => todoStore.toggleTodo(id)}>
+          Mark {completed ? "Undone" : "Done"}
+        </MarkDone>
         <div>
           <span>
             <svg
