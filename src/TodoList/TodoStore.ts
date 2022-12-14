@@ -28,6 +28,8 @@ export class TodoStoreImpl {
       toggleTodo: action,
       status: computed,
       deleteTodo: action,
+      undo: action,
+      redo: action,
     });
   }
 
@@ -83,7 +85,7 @@ export class TodoStoreImpl {
     }
   }
 
-  undoDelete() {
+  undo() {
     const item: any = this.future[this.future.length - 1];
     const itemType: string = this.future[this.future.length - 1].type;
     if (itemType === "TodoItem") {
@@ -100,7 +102,7 @@ export class TodoStoreImpl {
     this.future.splice(this.future.length - 1, 1);
   }
 
-  redoDelete() {
+  redo() {
     const item: any = this.past[this.past.length - 1];
     const itemType: string = this.past[this.past.length - 1].type;
     let itemIndex: number = -1;
