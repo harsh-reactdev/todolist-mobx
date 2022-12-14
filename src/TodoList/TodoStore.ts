@@ -68,11 +68,9 @@ export class TodoStoreImpl {
     let completed = 0,
       remaining = 0;
 
-    this.todos.forEach((todo) => {
-      if (todo.completed) {
-        completed++;
-      } else remaining++;
-    });
+    completed = this.todos.filter((todo) => todo.completed).length;
+    remaining = this.todos.length - completed;
+    // console.log(completed, remaining);
     return { completed, remaining };
   }
 
@@ -116,18 +114,9 @@ export class TodoStoreImpl {
     if (itemType === "TodoItem") {
       this.deleteTodo(item.id);
     } else {
-      // let itemIndex: number = -1;
-      // this.todos.forEach((todo) =>
-      //   todo.id === item.itemId ? (itemIndex = this.todos.indexOf(todo)) : null
-      // );
-      // console.log(itemIndex);
       this.todos[itemIndex].completed = !this.todos[itemIndex].completed;
       this.addToggleItem(itemIndex, this.todos[itemIndex].id);
     }
-
-    // if (this.past.length) {
-    //   this.deleteTodo(this.past[this.past.length - 1].id);
-    // }
     this.past.splice(this.past.length - 1, 1);
   }
 }

@@ -12,8 +12,8 @@ export const Header = styled.div`
 `;
 
 export const StyledInput = styled.input`
-  margin-top: 25px;
-  width: 60%;
+  margin-top: 30px;
+  width: 50%;
   height: 25px;
 `;
 

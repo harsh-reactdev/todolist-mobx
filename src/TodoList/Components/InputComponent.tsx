@@ -16,6 +16,7 @@ const InputComponent = observer(({ todoStore }: Todolist) => {
         onChange={(event: any) => {
           todoStore.inputVal = event.target.value;
         }}
+        placeholder="Task Name..."
       />
       <StyledSubmitBtn
         onClick={() => {
