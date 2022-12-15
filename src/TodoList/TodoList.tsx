@@ -23,7 +23,7 @@ const TodoList = observer(({ todoStore }: Todolist) => {
         title="redo"
         style={{ float: "left", background: "lightcyan" }}
         onClick={() => todoStore.redo()}
-        disabled={todoStore.redoArray.length ? false : true}
+        disabled={todoStore.historyItems.length ? false : true}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -44,8 +44,10 @@ const TodoList = observer(({ todoStore }: Todolist) => {
       <StyledBtn
         title="undo"
         style={{ float: "right", background: "lightcyan" }}
-        onClick={() => todoStore.undo()}
-        disabled={todoStore.undoArray.length ? false : true}
+        onClick={() =>
+          todoStore.historyItems.length ? todoStore.undo() : null
+        }
+        disabled={todoStore.historyItems.length ? false : true}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
