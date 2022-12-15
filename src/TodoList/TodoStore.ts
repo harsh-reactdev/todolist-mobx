@@ -22,9 +22,9 @@ export class TodoStoreImpl {
   constructor() {
     makeObservable(this, {
       inputVal: observable,
-      redoArray: observable,
       todos: observable,
       undoArray: observable,
+      redoArray: observable,
       addTodo: action,
       toggleTodo: action,
       status: computed,
@@ -87,7 +87,8 @@ export class TodoStoreImpl {
   }
 
   undo() {
-    const item: any = this.undoArray[this.undoArray.length - 1];
+    const item: TodoItem | ToggleItem =
+      this.undoArray[this.undoArray.length - 1];
     const itemType: string = this.undoArray[this.undoArray.length - 1].type;
     if (itemType === "TodoItem") {
       this.todos.splice(item.index, 0, item);

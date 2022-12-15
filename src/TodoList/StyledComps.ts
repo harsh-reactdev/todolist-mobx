@@ -12,14 +12,14 @@ export const Header = styled.div`
 `;
 
 export const StyledInput = styled.input`
-  margin-top: 30px;
+  margin-top: 15px;
   width: 50%;
-  height: 25px;
+  height: 32px;
 `;
 
 export const StyledSubmitBtn = styled.button`
   width: 18%;
-  height: 31px;
+  height: 38px;
   background-color: aliceblue;
 `;
 
@@ -66,7 +66,8 @@ export const MarkDone = styled.button`
 `;
 
 export const StyledBtn = styled.button`
+  position: relative;
   width: 150px;
   height: 40px;
-  background: none;
+  margin-top: 1.3%;
 `;
