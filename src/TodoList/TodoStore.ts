@@ -149,6 +149,7 @@ export class TodoStoreImpl {
     if (redoItem.type === 'undoAdd') {
       const item = this.addDelHistory[this.addDelHistory.length - 1];
       this.todos.splice(redoItem.itemIndex, 0, item);
+      this.addHistoryItem(this.historyItems.undo, 'Add', redoItem.itemIndex, redoItem.itemId);
       this.spliceRedoItem();
       this.spliceTodoBackupItem();
       console.log(this.historyItems.redo);
@@ -156,6 +157,7 @@ export class TodoStoreImpl {
 
     if (redoItem.type === 'undoDel') {
       this.todos.splice(redoItem.itemIndex, 1);
+      this.addHistoryItem(this.historyItems.undo, 'Del', redoItem.itemIndex, redoItem.itemId)
       this.spliceRedoItem();
       console.log(this.historyItems.redo);
     }
@@ -163,6 +165,7 @@ export class TodoStoreImpl {
     if (redoItem.type === 'undoToggle') {
       const index = this.indexFinder(redoItem.itemId);
       this.todos[index].completed = !this.todos[index].completed;
+      this.addHistoryItem(this.historyItems.undo, 'Toggle', redoItem.itemIndex, redoItem.itemId)
       this.spliceRedoItem();
       console.log(this.historyItems.redo);
     }
