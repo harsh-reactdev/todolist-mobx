@@ -1,6 +1,6 @@
 import { makeObservable, observable, action, computed } from "mobx";
 
-interface TodoItem {
+export interface TodoItem {
   index?: number;
   id: number;
   title: string;

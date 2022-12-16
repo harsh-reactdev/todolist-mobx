@@ -11,9 +11,7 @@ const TaskMap = observer(({ todoStore }: Todolist) => {
     return (
       <TodoCardComp
         todoStore={todoStore}
-        title={todo.title}
-        completed={todo.completed}
-        id={todo.id}
+        todo={todo}
       />
     );
   });
