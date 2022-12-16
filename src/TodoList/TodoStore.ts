@@ -48,7 +48,7 @@ export class TodoStoreImpl {
     this.addHistoryItem(
       this.historyItems.undo,
       "Add",
-      this.indexFinder(item),
+      this.indexFinder(item.id),
       item.id
     );
     console.clear();
@@ -56,12 +56,9 @@ export class TodoStoreImpl {
     this.inputVal = "";
   }
 
-  indexFinder = (item: TodoItem) => {
-    let itemIndex: number = -1;
-    this.todos.forEach((todo) =>
-      todo.id === item.id ? (itemIndex = this.todos.indexOf(todo)) : null
-    );
-    return itemIndex;
+  indexFinder = (id: number) => {
+    const index = this.todos.findIndex((item) => item.id === id);
+    return index;
   };
 
   addHistoryItem(
@@ -70,20 +67,17 @@ export class TodoStoreImpl {
     index: number,
     id: number
   ) {
-    // console.log(index)
-    this.historyItems.undo.push({
+    actionArr.push({
       type: type,
       itemIndex: index,
       itemId: id,
     });
-    // return console.log(this.historyItems)
   }
 
   toggleTodo(id: number) {
-    const index = this.todos.findIndex((item) => item.id === id);
+    const index = this.indexFinder(id);
     if (index > -1) {
       this.todos[index].completed = !this.todos[index].completed;
-      // this.addToggleItem(index, id);
       this.addHistoryItem(this.historyItems.undo, "Toggle", index, id);
     }
   }
@@ -99,41 +93,36 @@ export class TodoStoreImpl {
   }
 
   deleteTodo(id: number) {
-    let index: number = -1;
-    for (let todo of this.todos) {
-      if (todo.id === id) {
-        index = this.todos.indexOf(todo);
-      }
-    }
+    const index = this.indexFinder(id);
     this.addHistoryItem(this.historyItems.undo, "Del", index, id);
     this.todos.splice(index, 1);
-    // console.clear();
-    // console.log(this.historyItems);
   }
 
   undo() {
-    const undoItem: HistoryItem =
-      this.historyItems.undo[this.historyItems.undo.length - 1];
-    if (undoItem.type === "Add") {
-      const delItem: TodoItem = this.todos[undoItem.itemIndex];
-      this.addDelHistory.push(delItem);
-      this.todos.splice(undoItem.itemIndex, 1);
-      this.historyItems.redo.push;
-      this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
-    } else if (undoItem.type === "Del") {
-      const addItem: TodoItem =
-        this.addDelHistory[this.addDelHistory.length - 1];
-      this.todos.splice(undoItem.itemIndex, 0, addItem);
-      this.addDelHistory.splice(this.addDelHistory.length - 1, 1);
-      // this.addHistoryItem("Add", undoItem.itemIndex, undoItem.itemId);
-      this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
-    } else if (undoItem.type === "Toggle") {
-      this.todos[undoItem.itemIndex].completed =
-        !this.todos[undoItem.itemIndex].completed;
-      // this.addHistoryItem("Toggle", undoItem.itemIndex, undoItem.itemId);
-      // this.toggleTodo(undoItem.itemId);
-      this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
-    }
+
+    const undoItem: HistoryItem = this.historyItems.undo[this.historyItems.undo.length -1];
+    // const undoItem: HistoryItem =
+    //   this.historyItems.undo[this.historyItems.undo.length - 1];
+    // if (undoItem.type === "Add") {
+    //   const delItem: TodoItem = this.todos[undoItem.itemIndex];
+    //   this.addDelHistory.push(delItem);
+    //   this.addHistoryItem(this.historyItems.redo, 'Add', undoItem.itemIndex, undoItem.itemId)
+    //   this.todos.splice(undoItem.itemIndex, 1);
+    //   this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
+    // } else if (undoItem.type === "Del") {
+    //   const addItem: TodoItem =
+    //     this.addDelHistory[this.addDelHistory.length - 1];
+    //   this.todos.splice(undoItem.itemIndex, 0, addItem);
+    //   this.addDelHistory.splice(this.addDelHistory.length - 1, 1);
+    //   // this.addHistoryItem("Add", undoItem.itemIndex, undoItem.itemId);
+    //   this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
+    // } else if (undoItem.type === "Toggle") {
+    //   this.todos[undoItem.itemIndex].completed =
+    //     !this.todos[undoItem.itemIndex].completed;
+    //   // this.addHistoryItem("Toggle", undoItem.itemIndex, undoItem.itemId);
+    //   // this.toggleTodo(undoItem.itemId);
+    //   this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
+    // }
     // console.clear();
     // console.log(this.historyItems);
   }
@@ -141,23 +130,29 @@ export class TodoStoreImpl {
   redo() {
     const redoItem: HistoryItem =
       this.historyItems.redo[this.historyItems.redo.length - 1];
-    // if (redoItem.type === "Del") {
-    //   const addItem: TodoItem =
+
+    //   if(redoItem.type === 'Add'){
+    //     const addItem: TodoItem =
     //     this.addDelHistory[this.addDelHistory.length - 1];
-    //   this.todos.splice(redoItem.itemIndex, 0, addItem);
-    //   this.addDelHistory.splice(this.addDelHistory.length - 1, 1);
-    //   // this.addHistoryItem("Add", redoItem.itemIndex, redoItem.itemId);
-    //   this.historyItems.splice(this.historyItems.length - 1, 1);
-    // } else
-    if (redoItem.type === "Toggle") {
-      this.todos[redoItem.itemIndex].completed =
-        !this.todos[redoItem.itemIndex].completed;
-      // this.addHistoryItem("Toggle", redoItem.itemIndex, redoItem.itemId);
-      // this.toggleTodo(redoItem.itemId);
-      this.historyItems.redo.splice(this.historyItems.redo.length - 1, 1);
-    }
-    console.clear();
-    console.log(this.historyItems);
+    //     this.todos.splice(redoItem.itemIndex, 0, addItem)
+    //   }
+    // // if (redoItem.type === "Del") {
+    // //   const addItem: TodoItem =
+    // //     this.addDelHistory[this.addDelHistory.length - 1];
+    // //   this.todos.splice(redoItem.itemIndex, 0, addItem);
+    // //   this.addDelHistory.splice(this.addDelHistory.length - 1, 1);
+    // //   // this.addHistoryItem("Add", redoItem.itemIndex, redoItem.itemId);
+    // //   this.historyItems.splice(this.historyItems.length - 1, 1);
+    // // } else
+    // if (redoItem.type === "Toggle") {
+    //   this.todos[redoItem.itemIndex].completed =
+    //     !this.todos[redoItem.itemIndex].completed;
+    //   // this.addHistoryItem("Toggle", redoItem.itemIndex, redoItem.itemId);
+    //   // this.toggleTodo(redoItem.itemId);
+    //   this.historyItems.redo.splice(this.historyItems.redo.length - 1, 1);
+    // }
+    // console.clear();
+    // console.log(this.historyItems);
   }
 }
 
