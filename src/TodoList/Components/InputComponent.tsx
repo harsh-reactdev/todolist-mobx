@@ -1,4 +1,5 @@
 import { observer } from "mobx-react";
+import { KeyboardEvent } from 'react';
 import { StyledInput, StyledSubmitBtn } from "../StyledComps";
 import { TodoStoreImpl } from "../TodoStore";
 
@@ -15,6 +16,11 @@ const InputComponent = observer(({ todoStore }: Todolist) => {
         value={todoStore.inputVal}
         onChange={(event: any) => {
           todoStore.inputVal = event.target.value;
+        }}
+        onKeyDown={(e: React.KeyboardEvent<HTMLElement>) => {
+          if (e.key === 'Enter') {
+            if (todoStore.inputVal) todoStore.addTodo(todoStore.inputVal)
+          }
         }}
         placeholder="Task Name..."
       />
