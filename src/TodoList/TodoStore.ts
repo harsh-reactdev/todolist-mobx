@@ -51,8 +51,6 @@ export class TodoStoreImpl {
       this.indexFinder(item.id),
       item.id
     );
-    console.clear();
-    console.log(this.historyItems);
     this.inputVal = "";
   }
 
@@ -88,71 +86,86 @@ export class TodoStoreImpl {
 
     completed = this.todos.filter((todo) => todo.completed).length;
     remaining = this.todos.length - completed;
-    // console.log(completed, remaining);
     return { completed, remaining };
   }
 
   deleteTodo(id: number) {
     const index = this.indexFinder(id);
     this.addHistoryItem(this.historyItems.undo, "Del", index, id);
+    this.addDelHistory.push(this.todos[index]);
     this.todos.splice(index, 1);
+    console.log(this.historyItems.undo);
+    console.log(this.addDelHistory);
+  }
+
+  spliceUndoItem() {
+    this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1)
+  }
+
+  spliceRedoItem() {
+    this.historyItems.redo.splice(this.historyItems.redo.length - 1, 1)
+  }
+
+  spliceTodoBackupItem() {
+    this.addDelHistory.splice(this.addDelHistory.length - 1, 1)
   }
 
   undo() {
 
-    const undoItem: HistoryItem = this.historyItems.undo[this.historyItems.undo.length -1];
-    // const undoItem: HistoryItem =
-    //   this.historyItems.undo[this.historyItems.undo.length - 1];
-    // if (undoItem.type === "Add") {
-    //   const delItem: TodoItem = this.todos[undoItem.itemIndex];
-    //   this.addDelHistory.push(delItem);
-    //   this.addHistoryItem(this.historyItems.redo, 'Add', undoItem.itemIndex, undoItem.itemId)
-    //   this.todos.splice(undoItem.itemIndex, 1);
-    //   this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
-    // } else if (undoItem.type === "Del") {
-    //   const addItem: TodoItem =
-    //     this.addDelHistory[this.addDelHistory.length - 1];
-    //   this.todos.splice(undoItem.itemIndex, 0, addItem);
-    //   this.addDelHistory.splice(this.addDelHistory.length - 1, 1);
-    //   // this.addHistoryItem("Add", undoItem.itemIndex, undoItem.itemId);
-    //   this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
-    // } else if (undoItem.type === "Toggle") {
-    //   this.todos[undoItem.itemIndex].completed =
-    //     !this.todos[undoItem.itemIndex].completed;
-    //   // this.addHistoryItem("Toggle", undoItem.itemIndex, undoItem.itemId);
-    //   // this.toggleTodo(undoItem.itemId);
-    //   this.historyItems.undo.splice(this.historyItems.undo.length - 1, 1);
-    // }
-    // console.clear();
-    // console.log(this.historyItems);
+    const undoItem: HistoryItem = this.historyItems.undo[this.historyItems.undo.length - 1];
+
+    if (undoItem.type === 'Add') {
+      const item: TodoItem = this.todos[undoItem.itemIndex];
+      this.addDelHistory.push(item);
+      this.addHistoryItem(this.historyItems.redo, 'undoAdd', undoItem.itemIndex, undoItem.itemId)
+      this.todos.splice(undoItem.itemIndex, 1);
+      this.spliceUndoItem();
+      console.log(this.historyItems.undo);
+    }
+
+    else if (undoItem.type === 'Del') {
+      const item: TodoItem = this.addDelHistory[this.addDelHistory.length - 1];
+      this.todos.splice(undoItem.itemIndex, 0, item);
+      this.addHistoryItem(this.historyItems.redo, 'undoDel', undoItem.itemIndex, undoItem.itemId)
+      this.spliceTodoBackupItem();
+      this.spliceUndoItem();
+      console.log(this.historyItems.undo);
+    }
+
+    else if (undoItem.type === 'Toggle') {
+      const index = this.indexFinder(undoItem.itemId);
+      this.todos[index].completed = !this.todos[index].completed;
+
+      this.addHistoryItem(this.historyItems.redo, 'undoToggle', undoItem.itemIndex, undoItem.itemId);
+      this.spliceUndoItem();
+      console.log(this.historyItems.undo);
+    }
   }
 
   redo() {
     const redoItem: HistoryItem =
       this.historyItems.redo[this.historyItems.redo.length - 1];
 
-    //   if(redoItem.type === 'Add'){
-    //     const addItem: TodoItem =
-    //     this.addDelHistory[this.addDelHistory.length - 1];
-    //     this.todos.splice(redoItem.itemIndex, 0, addItem)
-    //   }
-    // // if (redoItem.type === "Del") {
-    // //   const addItem: TodoItem =
-    // //     this.addDelHistory[this.addDelHistory.length - 1];
-    // //   this.todos.splice(redoItem.itemIndex, 0, addItem);
-    // //   this.addDelHistory.splice(this.addDelHistory.length - 1, 1);
-    // //   // this.addHistoryItem("Add", redoItem.itemIndex, redoItem.itemId);
-    // //   this.historyItems.splice(this.historyItems.length - 1, 1);
-    // // } else
-    // if (redoItem.type === "Toggle") {
-    //   this.todos[redoItem.itemIndex].completed =
-    //     !this.todos[redoItem.itemIndex].completed;
-    //   // this.addHistoryItem("Toggle", redoItem.itemIndex, redoItem.itemId);
-    //   // this.toggleTodo(redoItem.itemId);
-    //   this.historyItems.redo.splice(this.historyItems.redo.length - 1, 1);
-    // }
-    // console.clear();
-    // console.log(this.historyItems);
+    if (redoItem.type === 'undoAdd') {
+      const item = this.addDelHistory[this.addDelHistory.length - 1];
+      this.todos.splice(redoItem.itemIndex, 0, item);
+      this.spliceRedoItem();
+      this.spliceTodoBackupItem();
+      console.log(this.historyItems.redo);
+    }
+
+    if (redoItem.type === 'undoDel') {
+      this.todos.splice(redoItem.itemIndex, 1);
+      this.spliceRedoItem();
+      console.log(this.historyItems.redo);
+    }
+
+    if (redoItem.type === 'undoToggle') {
+      const index = this.indexFinder(redoItem.itemId);
+      this.todos[index].completed = !this.todos[index].completed;
+      this.spliceRedoItem();
+      console.log(this.historyItems.redo);
+    }
   }
 }
 
