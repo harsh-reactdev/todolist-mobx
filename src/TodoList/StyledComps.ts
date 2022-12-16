@@ -35,8 +35,11 @@ export const StyledFooter = styled.div`
 `;
 
 export const TodoCard = styled.div`
+  -webkit-box-shadow: 0 0 5px 4px #eeeeee;
+  -moz-box-shadow: 0 0 5px 4px #eeeeee;
+  box-shadow: 0 0 5px 4px #eeeeee;
   border: 1px;
-  background-color: aliceblue;
+  background-color: lightcyan;
   width: 18.95%;
   float: left;
   height: 200px;
