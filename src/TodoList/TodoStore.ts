@@ -89,13 +89,15 @@ export class TodoStoreImpl {
     return { completed, remaining };
   }
 
-  deleteTodo(id: number) {
-    const index = this.indexFinder(id);
+  onDelete(id: number, index: number) {
     this.addHistoryItem(this.historyItems.undo, "Del", index, id);
     this.addDelHistory.push(this.todos[index]);
+  }
+
+  deleteTodo(id: number) {
+    const index = this.indexFinder(id);
+    this.onDelete(id, index);
     this.todos.splice(index, 1);
-    console.log(this.historyItems.undo);
-    console.log(this.addDelHistory);
   }
 
   spliceUndoItem() {
@@ -120,7 +122,7 @@ export class TodoStoreImpl {
       this.addHistoryItem(this.historyItems.redo, 'undoAdd', undoItem.itemIndex, undoItem.itemId)
       this.todos.splice(undoItem.itemIndex, 1);
       this.spliceUndoItem();
-      console.log(this.historyItems.undo);
+      // console.log(this.historyItems.undo);
     }
 
     else if (undoItem.type === 'Del') {
@@ -129,7 +131,7 @@ export class TodoStoreImpl {
       this.addHistoryItem(this.historyItems.redo, 'undoDel', undoItem.itemIndex, undoItem.itemId)
       this.spliceTodoBackupItem();
       this.spliceUndoItem();
-      console.log(this.historyItems.undo);
+      // console.log(this.historyItems.undo);
     }
 
     else if (undoItem.type === 'Toggle') {
@@ -138,7 +140,7 @@ export class TodoStoreImpl {
 
       this.addHistoryItem(this.historyItems.redo, 'undoToggle', undoItem.itemIndex, undoItem.itemId);
       this.spliceUndoItem();
-      console.log(this.historyItems.undo);
+      // console.log(this.historyItems.undo);
     }
   }
 
@@ -152,14 +154,14 @@ export class TodoStoreImpl {
       this.addHistoryItem(this.historyItems.undo, 'Add', redoItem.itemIndex, redoItem.itemId);
       this.spliceRedoItem();
       this.spliceTodoBackupItem();
-      console.log(this.historyItems.redo);
+      // console.log(this.historyItems.redo);
     }
 
     if (redoItem.type === 'undoDel') {
       this.todos.splice(redoItem.itemIndex, 1);
       this.addHistoryItem(this.historyItems.undo, 'Del', redoItem.itemIndex, redoItem.itemId)
       this.spliceRedoItem();
-      console.log(this.historyItems.redo);
+      // console.log(this.historyItems.redo);
     }
 
     if (redoItem.type === 'undoToggle') {
@@ -167,7 +169,7 @@ export class TodoStoreImpl {
       this.todos[index].completed = !this.todos[index].completed;
       this.addHistoryItem(this.historyItems.undo, 'Toggle', redoItem.itemIndex, redoItem.itemId)
       this.spliceRedoItem();
-      console.log(this.historyItems.redo);
+      // console.log(this.historyItems.redo);
     }
   }
 }
