@@ -13,6 +13,7 @@ interface HistoryItem {
   itemId: number;
 }
 
+
 export class TodoStoreImpl {
   addDelHistory: TodoItem[] = [];
   todos: TodoItem[] = [];
@@ -28,8 +29,8 @@ export class TodoStoreImpl {
       toggleTodo: action,
       status: computed,
       deleteTodo: action,
-      // undo: action,
-      // redo: action,
+      undo: action,
+      redo: action,
     });
   }
 
@@ -70,8 +71,6 @@ export class TodoStoreImpl {
       this.todos[index].completed = !this.todos[index].completed;
       // this.addToggleItem(index, id);
       this.addHistoryItem("Toggle", index, id);
-      // console.clear();
-      // console.log(this.historyItems);
     }
   }
 
